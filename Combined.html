@@ -86,17 +86,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Changed z-index to 1 to ensure visibility */
+            pointer-events: none; /* Ensure bubbles don't interfere with user interactions */
+            overflow: hidden; /* Prevent bubbles from appearing outside the container */
+            z-index: 2; /* Ensure bubbles are above the main content */
         }
 
         .bubble {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: hsl(0, 100%, 50%); /* Set a default color */
-            bottom: -10px; /* Start below the view */
-            animation: rise 5s infinite;
+            background: rgba(255, 255, 255, 0.7);
+            bottom: -20px;
+            animation: rise 5s linear forwards; /* Change to 'forwards' to make it disappear */
         }
 
         @keyframes rise {
@@ -161,9 +163,24 @@
             `,
             contact: '<h2>Contact Us</h2><p>For inquiries, please reach out to us via email at ProjectApe2.0@gmail.com.</p>',
             "sneak-peaks": '<h2>Sneak Peaks!</h2><p>See Below for the latest previews of our game</p>',
-            creators: '<h2>Creator Program</h2><p>Join our creator program and help us build the community!</p>',
+            creators: `
+                <h2 style="margin-top: 210px;">Creators, Unite!</h2>
+                <p>Our Community is the most important thing to us, thats why we made the Creator Program, 
+                    where you make content on our game, and in return you get perks in game, and in the discord!</p>
+                <div style="padding: 10px; box-sizing: border-box; width: 100%; margin: 0 auto;">
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdEE9DFhONz6X7uXkZr7lk9gGC__LQhC_TU637azNgNWTqGrA/viewform?embedded=true" 
+                            width="100%" 
+                            height="1000" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0" 
+                            style="border: none;">
+                        Loading…
+                    </iframe>
+                </div>
+            `,
             suggestions: `
-                <h2 style="margin-top: 310px;">Suggestions</h2>
+                <h2 style="margin-top: 210px;">Suggestions</h2>
                 <p>We value your feedback! Please fill out the form below to share your suggestions.</p>
                 <div style="padding: 10px; box-sizing: border-box; width: 100%; margin: 0 auto;">
                     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeu9W7mAHkr3lMF0RH-hoqPEwqRpkH3gMSQzNzHb39bHXFJ2g/viewform?embedded=true" 
@@ -190,7 +207,21 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            navigate(new Event('load'), 'home');
+            const page = 'home'; // Ensure the page variable is defined
+            navigate(new Event('load'), page);
+            if (page === 'home') {
+                const bubbleContainer = document.querySelector('.bubbles');
+
+                setInterval(() => {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    bubble.style.left = `${Math.random() * 100}%`;
+                    bubble.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    bubbleContainer.appendChild(bubble);
+
+                    bubble.addEventListener('animationend', () => bubble.remove());
+                }, 500);
+            }
         });
     </script>
 </body>
